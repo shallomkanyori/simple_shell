@@ -86,12 +86,13 @@ int main(int ac, char **av, char **env)
 			fflush(stdout);
 		}
 
-		res = getline(&input, &input_len, stdin);
-		if (res == -1)
+		read_res = getline(&input, &input_len, stdin);
+		if (read_res == -1)
 		{
-			if (!interactive || input_len > 0)
+			if (errno == 0 || (errno == ENOTTY && !interactive))
 				break;
 
+			res = errno;
 			print_error(av);
 			continue;
 		}
@@ -100,10 +101,10 @@ int main(int ac, char **av, char **env)
 		if (cmd[0] == NULL)
 			continue;
 
-		exec_cmd(cmd, av, env);
+		res = exec_cmd(cmd, av, env);
 	}
 
 	free(input);
 	input = NULL;
-	return (0);
+	return (res);
 }
