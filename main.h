@@ -9,4 +9,7 @@
 #include <sys/wait.h>
 #include <string.h>
 
+void print_error(char **av, int *res);
+char *_strdup(char *str);
+
 #endif /* MAIN_H */

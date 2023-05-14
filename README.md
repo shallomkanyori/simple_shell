@@ -20,3 +20,7 @@ You don't have to:
 - implement built-ins
 - handle special characters: `"`, `'`, `\`, `*`, `&`, `#`, backtick
 - be able to move the cursor
+
+**Task 2: Simple shell 0.2.**
+Simple shell 0.1 +
+- Handle commands with arguments
