@@ -12,7 +12,7 @@
  */
 void parse_input(char *input, char ***cmd, char **av, int *res)
 {
-	char *delim = " \n";
+	char *delim = " \t\n";
 	char *input_cpy;
 	char *token;
 	int argc = 0;
@@ -48,42 +48,6 @@ void parse_input(char *input, char ***cmd, char **av, int *res)
 
 	(*cmd)[i] = NULL;
 	free(input_cpy);
-}
-
-/**
- * exec_cmd - executes the given command
- * @cmd: a list containing the command name and NULL
- * @av: the program arguments
- * @env: the environment variables
- * @res: a pointer to the return value of main for error handling
- *
- * Return: 0 on success, non-zero on failure.
- */
-int exec_cmd(char **cmd, char **av, char **env, int *res)
-{
-	int child_pid;
-	int status;
-
-	child_pid = fork();
-	if (child_pid == 0)
-	{
-		execve(cmd[0], cmd, env);
-		print_error(av, res); /* if execve returns, there is an error */
-		exit(*res); /* use the errno stored in res */
-	}
-	else if (child_pid > 0)
-	{
-		wait(&status);
-		if (WIFEXITED(status))
-			return (WEXITSTATUS(status));
-		else
-			return (-1);
-	}
-	else
-	{
-		print_error(av, res);
-		return (*res);
-	}
 }
 
 /**
@@ -128,7 +92,7 @@ int main(int ac, char **av, char **env)
 		if (cmd == NULL || cmd[0] == NULL)
 			continue;
 
-		res = exec_cmd(cmd, av, env, &res);
+		res = handle_cmd(cmd, av, env, &res);
 	}
 
 	free(input);

@@ -24,3 +24,8 @@ You don't have to:
 **Task 2: Simple shell 0.2.**
 Simple shell 0.1 +
 - Handle commands with arguments
+
+**Task 3: Simple shell 0.3.**
+Simple shell 0.2+
+- Handle the `PATH`
+- `fork` must not be called if the command doesn't exist
