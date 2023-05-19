@@ -25,5 +25,10 @@ int _strncmp(char *s1, char *s2, int n);
 char *_strcpy(char *dest, char *src);
 char *_strcat(char *dest, char *src);
 char *_strchr(char *str, char c);
+void *_memcpy(void *dest, void *src, unsigned int n);
+
+/* memory functions */
+void *_realloc(void *ptr, unsigned int s_old, unsigned int s_new);
+void free_ptr(void **ptr);
 
 #endif /* MAIN_H */

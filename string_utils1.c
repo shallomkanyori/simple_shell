@@ -18,3 +18,23 @@ char *_strchr(char *str, char c)
 
 	return (NULL);
 }
+
+/**
+ * _memcpy - copies a memory ares
+ * @dest: a pointer to the memory area to copy to
+ * @src: a pointer to the memory area to copy from
+ * @n: the number of bytes to copy
+ *
+ * Return: a pointer to dest.
+ */
+void *_memcpy(void *dest, void *src, unsigned int n)
+{
+	unsigned int i;
+	char *d_ptr = (char *)dest;
+	char *s_ptr = (char *)src;
+
+	for (i = 0; i < n; i++)
+		d_ptr[i] = s_ptr[i];
+
+	return (dest);
+}

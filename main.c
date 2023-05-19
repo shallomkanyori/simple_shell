@@ -7,16 +7,18 @@
  * @cmd: a pointer to where to store the result
  * @av: the program arguments for error handling
  * @res: a pointer to the return value of main for error handling
+ * @s_old: a pointer to the prev size of cmd, for realloc
  *
  * Return: nothing.
  */
-void parse_input(char *input, char ***cmd, char **av, int *res)
+void parse_input(char *input, char ***cmd, char **av, int *res,
+		unsigned int *s_old)
 {
 	char *delim = " \t\n";
-	char *input_cpy;
-	char *token;
-	int argc = 0;
-	int i = 0;
+	char *input_cpy, *token;
+	int argc = 0, i = 0;
+	unsigned int s_new;
+	char **cmd_res;
 
 	input_cpy = _strdup(input);
 	if (input_cpy == NULL)
@@ -32,13 +34,16 @@ void parse_input(char *input, char ***cmd, char **av, int *res)
 		token = strtok(NULL, delim);
 	}
 
-	*cmd = realloc(*cmd, sizeof(char *) * (argc + 1));
-	if (*cmd == NULL)
+	s_new = sizeof(char *) * (argc + 1);
+	cmd_res = _realloc(*cmd, *s_old, s_new);
+	if (cmd_res == NULL)
 	{
 		print_error(av, res);
 		return;
 	}
 
+	*cmd = cmd_res;
+	*s_old = s_new;
 	token = strtok(input, delim);
 	while (token)
 	{
@@ -65,6 +70,7 @@ int main(int ac, char **av, char **env)
 	size_t input_len = 0;
 	char **cmd = NULL;
 	int res = 0;
+	unsigned int s_old = 0; /* holds prev size of cmd array for realloc */
 
 	(void) ac;
 	while (1)
@@ -88,16 +94,14 @@ int main(int ac, char **av, char **env)
 			continue;
 		}
 
-		parse_input(input, &cmd, av, &res);
+		parse_input(input, &cmd, av, &res, &s_old);
 		if (cmd == NULL || cmd[0] == NULL)
 			continue;
 
 		res = handle_cmd(cmd, av, env, &res);
 	}
 
-	free(input);
-	free(cmd);
-	input = NULL;
-	cmd = NULL;
+	free_ptr((void **)&input);
+	free_ptr((void **)&cmd);
 	return (res);
 }

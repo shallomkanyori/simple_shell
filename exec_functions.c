@@ -29,15 +29,13 @@ int handle_cmd(char **cmd, char **av, char **env, int *res)
 			write(STDERR_FILENO, ": not found\n", 12) == -1)
 			print_error(av, res);
 
-		free(full_path);
-		full_path = NULL;
+		free_ptr((void **)&full_path);
 
 		return (*res);
 	}
 
 	result = exec_cmd(cmd, av, env, res);
-	free(full_path);
-	full_path = NULL;
+	free_ptr((void **)&full_path);
 
 	return (result);
 }
@@ -110,8 +108,8 @@ char *get_path(char **env)
  */
 void search_path(char *path, char **full_path, char **cmd, char **av, int *res)
 {
-	char *path_cpy;
-	char *path_token;
+	char *path_cpy, *path_token, *full_path_res;
+	unsigned int s_old = 0, s_new = 0;
 
 	/* check if the command is a relative or absolute path */
 	if (_strchr(cmd[0], '/') != NULL)
@@ -127,15 +125,16 @@ void search_path(char *path, char **full_path, char **cmd, char **av, int *res)
 	path_token = strtok(path_cpy, ":");
 	while (path_token)
 	{
-		*full_path = realloc(*full_path, sizeof(char) *
-				(_strlen(path_token) + _strlen(cmd[0]) + 2)); /* +2 for '/' and '\0' */
-		if (full_path == NULL)
+		s_new = sizeof(char) * (_strlen(path_token) + _strlen(cmd[0]) + 2);
+		full_path_res = _realloc(*full_path, s_old, s_new);
+		if (full_path_res == NULL)
 		{
-			free(path_cpy);
+			free_ptr((void **)&path_cpy);
 			print_error(av, res);
 			return;
 		}
 
+		*full_path = full_path_res;
 		_strcpy(*full_path, path_token);
 		_strcat(*full_path, "/");
 		_strcat(*full_path, cmd[0]);
@@ -145,7 +144,8 @@ void search_path(char *path, char **full_path, char **cmd, char **av, int *res)
 			break;
 		}
 
+		s_old = s_new;
 		path_token = strtok(NULL, ":");
 	}
-	free(path_cpy);
+	free_ptr((void **)&path_cpy);
 }
