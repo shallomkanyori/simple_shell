@@ -67,6 +67,7 @@ void free_shdata(shdata_t *sh_data);
 
 /*builtins*/
 int _myexit(shdata_t *sh_data);
+int _myenv(shdata_t *sh_data);
 
 /*write helpers */
 int putchr(char c);

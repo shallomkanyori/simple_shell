@@ -12,7 +12,7 @@ int handle_cmd(shdata_t *sh_data)
 	char *cmd_path = NULL;
 	int path_found = 0;
 	int result = 0;
-	bi_t builtins[] = {{"exit", _myexit}, {NULL, NULL}};
+	bi_t builtins[] = {{"exit", _myexit}, {"env", _myenv}, {NULL, NULL}};
 	int bi_ind = check_builtin(sh_data->cmd[0], builtins);
 
 	if (bi_ind >= 0)
