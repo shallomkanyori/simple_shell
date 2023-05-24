@@ -8,26 +8,32 @@
  */
 int handle_cmd(shdata_t *sh_data)
 {
-	char *full_path = NULL;
-	char *cmd_path = NULL;
-	int path_found = 0;
-	int result = 0;
+	char *full_path = NULL, *cmd_path = NULL;
+	int path_found = 0, result = 0;
 	bi_t builtins[] = {{"exit", _myexit}, {"env", _myenv}, {NULL, NULL}};
 	int bi_ind = check_builtin(sh_data->cmd[0], builtins);
 
 	if (bi_ind >= 0)
 		return (builtins[bi_ind].func(sh_data));
 
-	if (sh_data->path == NULL)
-		sh_data->path = get_path(sh_data->env);
+	/* if command is not a path, search PATH */
+	if (_strchr(sh_data->cmd[0], '/') == NULL)
+	{
+		if (sh_data->path == NULL)
+			sh_data->path = get_path(sh_data->env);
 
-	if (sh_data->path != NULL)
-		search_path(sh_data, &full_path, &path_found);
+		if (sh_data->path != NULL)
+			search_path(sh_data, &full_path, &path_found);
 
-	cmd_path = path_found ? full_path : sh_data->cmd[0];
+		cmd_path = path_found ? full_path : NULL;
+	}
+	else
+	{
+		cmd_path = sh_data->cmd[0];
+	}
 
 	/* check if command executable found */
-	if (access(cmd_path, F_OK) != 0)
+	if (cmd_path == NULL || access(cmd_path, F_OK) != 0)
 	{
 		errno = 127;
 		sh_data->err_message = "not found";
@@ -138,9 +144,6 @@ void search_path(shdata_t *sh_data, char **full_path, int *found)
 {
 	char *path_cpy, *path_token, *full_path_res;
 	unsigned int s_old = 0, s_new = 0;
-
-	if (_strchr(sh_data->cmd[0], '/') != NULL) /* if command is already a path */
-		return;
 
 	path_cpy = _strdup(sh_data->path);
 	if (path_cpy == NULL)
