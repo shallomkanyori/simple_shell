@@ -15,7 +15,6 @@
 
 /**
  * struct shdata - A shell data struct
- * struct bi - A struct for the builtin functions
  * @av: the program arguments
  * @env: the environment variables
  * @cmd: the array containing the current command and its arguments
@@ -46,6 +45,7 @@ typedef struct shdata
 	char *err_message;
 	int err_incl_cmd;
 } shdata_t;
+
 /**
  * struct bi - A struct for the builtin functions
  * @name: the name of the command
@@ -58,20 +58,6 @@ typedef struct bi
 	char *name;
 	int (*func)(shdata_t *sh_data);
 } bi_t;
-/*exec functions*/
-int check_builtin(char *cmd, bi_t builtins[]);
-
-/*string functions*/
-int _strcmp(char *s1, char *s2);
-void free_shdata(shdata_t *sh_data);
-
-/*builtins*/
-int _myexit(shdata_t *sh_data);
-int _myenv(shdata_t *sh_data);
-
-/*write helpers */
-int putchr(char c);
-int putstr(char *str);
 
 /* error handling functions */
 void print_error(shdata_t *sh_data);
@@ -81,6 +67,7 @@ int put_chr_err(char c);
 /* exec functions */
 int handle_cmd(shdata_t *sh_data);
 int exec_cmd(shdata_t *sh_data, char *cmd_path);
+int check_builtin(char *cmd, bi_t builtins[]);
 char *get_path(char **env);
 void search_path(shdata_t *sh_data, char **full_path, int *found);
 
@@ -92,12 +79,22 @@ char *_strcpy(char *dest, char *src);
 char *_strcat(char *dest, char *src);
 char *_strchr(char *str, char c);
 void *_memcpy(void *dest, void *src, unsigned int n);
+int _strcmp(char *s1, char *s2);
 
 /* memory functions */
 void *_realloc(void *ptr, unsigned int s_old, unsigned int s_new);
 void free_ptr(void **ptr);
+void free_shdata(shdata_t *sh_data);
 
 /* util functions */
 char *itoa(unsigned int n, char *res);
+
+/* builtins */
+int _myexit(shdata_t *sh_data);
+int _myenv(shdata_t *sh_data);
+
+/*write helpers */
+int putchr(char c);
+int putstr(char *str);
 
 #endif /* MAIN_H */

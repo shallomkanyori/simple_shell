@@ -38,6 +38,7 @@ void *_memcpy(void *dest, void *src, unsigned int n)
 
 	return (dest);
 }
+
 /**
  * _strcmp - compares two strings
  * @s1: the first string
@@ -54,10 +55,11 @@ int _strcmp(char *s1, char *s2)
 		return (0);
 	else if (s1 == NULL)
 		return (-1);
-	else if (s1 == NULL)
+	else if (s2 == NULL)
 		return (1);
 
 	for (i = 0; s1[i] && s1[i] == s2[i]; i++)
 		;
+
 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }

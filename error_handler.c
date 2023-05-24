@@ -9,37 +9,29 @@
 void print_error(shdata_t *sh_data)
 {
 	sh_data->res = errno;
-	if (errno != 1 && errno != 2)
+	put_str_err(sh_data->av[0]);
+	put_str_err(": ");
+	put_str_err(itoa(sh_data->line_num, sh_data->line_num_str));
+	put_str_err(": ");
+
+	if (sh_data->err_incl_cmd)
 	{
-		put_str_err(sh_data->av[0]);
+		put_str_err(sh_data->cmd[0]);
 		put_str_err(": ");
-		put_str_err(itoa(sh_data->line_num, sh_data->line_num_str));
-		put_str_err(": ");
+		sh_data->err_incl_cmd = 0;
+	}
 
-		if (sh_data->err_incl_cmd)
-		{
-			put_str_err(sh_data->cmd[0]);
-			put_str_err(": ");
-			sh_data->err_incl_cmd = 0;
-		}
-
-		if (sh_data->err_message != NULL)
-		{
-			put_str_err(sh_data->err_message);
-			put_chr_err('\n');
-			put_chr_err(BUFF_FLUSH);
-			sh_data->err_message = NULL;
-		}
-		else
-		{
-			put_chr_err(BUFF_FLUSH);
-			perror("");
-			fflush(stderr);
-		}
+	if (sh_data->err_message != NULL)
+	{
+		put_str_err(sh_data->err_message);
+		put_chr_err('\n');
+		put_chr_err(BUFF_FLUSH);
+		sh_data->err_message = NULL;
 	}
 	else
 	{
-		perror(sh_data->av[0]);
+		put_chr_err(BUFF_FLUSH);
+		perror("");
 		fflush(stderr);
 	}
 }

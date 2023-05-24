@@ -42,26 +42,6 @@ int handle_cmd(shdata_t *sh_data)
 	free_ptr((void **)&full_path);
 	return (result);
 }
-/**
- * check_builtin - checks if the command is a builtin
- * @cmd: the command
- * @builtins: an array of the available builtins
- *
- * Return: the index of the corresponding element in the array, or -1 if cmd
- * is not builtin.
- */
-int check_builtin(char *cmd, bi_t builtins[])
-{
-	int i;
-
-	for (i = 0; builtins[i].name; i++)
-	{
-		if (_strcmp(cmd, builtins[i].name) == 0)
-			return (i);
-	}
-	return (-1);
-}
-
 
 /**
  * exec_cmd - executes the given command
@@ -103,6 +83,27 @@ int exec_cmd(shdata_t *sh_data, char *cmd_path)
 		print_error(sh_data);
 		return (sh_data->res);
 	}
+}
+
+/**
+ * check_builtin - checks if the command is a builtin
+ * @cmd: the command
+ * @builtins: an array of the available builtins
+ *
+ * Return: the index of the corresponding element in the array, or -1 if cmd
+ * is not builtin.
+ */
+int check_builtin(char *cmd, bi_t builtins[])
+{
+	int i;
+
+	for (i = 0; builtins[i].name; i++)
+	{
+		if (_strcmp(cmd, builtins[i].name) == 0)
+			return (i);
+	}
+
+	return (-1);
 }
 
 /**
