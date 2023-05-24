@@ -11,7 +11,7 @@ int putstr(char *str)
 	int i;
 
 	for (i = 0; str[i]; i++)
-		if (putchar(str[i] == -1)
+		if (putchar(str[i] == -1))
 				return (-1);
 	return (0);
 }

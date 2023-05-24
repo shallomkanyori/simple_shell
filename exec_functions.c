@@ -54,9 +54,9 @@ int check_builtin(char *cmd, bi_t builtins[])
 {
 	int i;
 
-	for (i = 0; builtins[i].name; i)
+	for (i = 0; builtins[i].name; i++)
 	{
-		if (_strcmp(cmd, builtin[i].name) == 0)
+		if (_strcmp(cmd, builtins[i].name) == 0)
 			return (i);
 	}
 	return (-1);
@@ -117,9 +117,9 @@ char *get_path(char **env)
 	int len = _strlen(path_str);
 	int i;
 
-	for (i = 0; env && env[i]; i)
+	for (i = 0; env && env[i]; i++)
 		if (_strncmp(env[i], path_str, len) == 0 && env[i][len] == '=')
-			return (env[i]  len  1);
+			return (env[i] + len + 1);
 
 	return (NULL);
 }
@@ -151,7 +151,7 @@ void search_path(shdata_t *sh_data, char **full_path, int *found)
 	path_token = strtok(path_cpy, ":");
 	while (path_token)
 	{
-		s_new = sizeof(char) * (_strlen(path_token)  _strlen(sh_data->cmd[0])  2);
+		s_new = sizeof(char) * (_strlen(path_token) + _strlen(sh_data->cmd[0]) + 2);
 		full_path_res = _realloc(*full_path, s_old, s_new);
 		if (full_path_res == NULL)
 		{
