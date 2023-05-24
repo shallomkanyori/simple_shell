@@ -15,6 +15,7 @@
 
 /**
  * struct shdata - A shell data struct
+ * struct bi - A struct for the builtin functions
  * @av: the program arguments
  * @env: the environment variables
  * @cmd: the array containing the current command and its arguments
@@ -45,6 +46,31 @@ typedef struct shdata
 	char *err_message;
 	int err_incl_cmd;
 } shdata_t;
+/**
+ * struct bi - A struct for the builtin functions
+ * @name: the name of the command
+ * @func: the actual builtin function
+ *
+ * Description: A struct that maps a command name to a builtin function
+ */
+typedef struct bi
+{
+	char *name;
+	int (*func)(shdata_t *sh_data);
+} bi_t;
+/*exec functions*/
+int check_builtin(char *cmd, bi_t builtins[]);
+
+/*string functions*/
+int _strcmp(char *s1, char *s2);
+void free_shdata(shdata_t *sh_data);
+
+/*builtins*/
+int _myexit(shdata_t *sh_data);
+
+/*write helpers */
+int putchr(char c);
+int putstr(char *str);
 
 /* error handling functions */
 void print_error(shdata_t *sh_data);

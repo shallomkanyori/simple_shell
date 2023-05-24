@@ -12,6 +12,11 @@ int handle_cmd(shdata_t *sh_data)
 	char *cmd_path = NULL;
 	int path_found = 0;
 	int result = 0;
+	bi_t builtins[] = {{"exit", _myexit}, {NULL, NULL}};
+	int bi_ind = check_builtin(sh_data->cmd[0], builtins);
+
+	if (bi_ind >= 0)
+		return (builtins[bi_ind].func(sh_data));
 
 	if (sh_data->path == NULL)
 		sh_data->path = get_path(sh_data->env);
@@ -37,6 +42,26 @@ int handle_cmd(shdata_t *sh_data)
 	free_ptr((void **)&full_path);
 	return (result);
 }
+/**
+ * check_builtin - checks if the command is a builtin
+ * @cmd: the command
+ * @builtins: an array of the available builtins
+ *
+ * Return: the index of the corresponding element in the array, or -1 if cmd
+ * is not builtin.
+ */
+int check_builtin(char *cmd, bi_t builtins[])
+{
+	int i;
+
+	for (i = 0; builtins[i].name; i)
+	{
+		if (_strcmp(cmd, builtin[i].name) == 0)
+			return (i);
+	}
+	return (-1);
+}
+
 
 /**
  * exec_cmd - executes the given command
@@ -92,9 +117,9 @@ char *get_path(char **env)
 	int len = _strlen(path_str);
 	int i;
 
-	for (i = 0; env && env[i]; i++)
+	for (i = 0; env && env[i]; i)
 		if (_strncmp(env[i], path_str, len) == 0 && env[i][len] == '=')
-			return (env[i] + len + 1);
+			return (env[i]  len  1);
 
 	return (NULL);
 }
@@ -126,7 +151,7 @@ void search_path(shdata_t *sh_data, char **full_path, int *found)
 	path_token = strtok(path_cpy, ":");
 	while (path_token)
 	{
-		s_new = sizeof(char) * (_strlen(path_token) + _strlen(sh_data->cmd[0]) + 2);
+		s_new = sizeof(char) * (_strlen(path_token)  _strlen(sh_data->cmd[0])  2);
 		full_path_res = _realloc(*full_path, s_old, s_new);
 		if (full_path_res == NULL)
 		{
