@@ -1,5 +1,5 @@
 ## C - Simple Shell
-#### Write a simple UNIX command interpreter.
+#### Write a simple UNIX command interpreters.
 
 **Task 0: Betty would be proud.**
 Write beautiful code that passes the Betty checks.
